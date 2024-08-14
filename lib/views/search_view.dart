@@ -1,4 +1,9 @@
+import 'dart:developer';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:wheatherapp/models/weather_model.dart';
+import 'package:wheatherapp/services/weather_service.dart';
 
 class SearchView extends StatelessWidget {
   const SearchView({super.key});
@@ -7,7 +12,8 @@ class SearchView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Search City",
+        title: Text(
+          "Search City",
           style: TextStyle(
             fontWeight: FontWeight.bold,
           ),
@@ -19,26 +25,28 @@ class SearchView extends StatelessWidget {
         ),
         child: Center(
           child: TextField(
-            onSubmitted: (value){
-              print(value);
+            onSubmitted: (value) async {
+              weatherModel = await WeatherServices(Dio())
+                  .getCurrentWeather(cityname: value);
+              Navigator.pop(context);
             },
             decoration: InputDecoration(
               contentPadding: EdgeInsets.symmetric(
                 vertical: 20,
-                    horizontal: 8,
+                horizontal: 8,
               ),
               labelText: 'Search',
               suffixIcon: Icon(Icons.search),
               hintText: 'Enter City Name',
-                border: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.green),
-                ),
-
+              border: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.green),
+              ),
             ),
           ),
         ),
       ),
-
     );
   }
 }
+
+WeatherModel? weatherModel ;
